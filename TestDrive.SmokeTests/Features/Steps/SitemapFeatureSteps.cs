@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -21,6 +22,7 @@ namespace TestDrive.SmokeTests.Features.Steps
         private string reply = null;
         private WebException webException;
         private HttpWebResponse webResponse = null;
+        private Dictionary<string, HttpStatusCode> responses = new Dictionary<string, HttpStatusCode>();
         private static Process process;
 
         [Given(@"I visit /sitemap\.xml")]
@@ -51,7 +53,23 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Given(@"I visit each URL in the response")]
         public void GivenIVisitEachURLInTheResponse()
         {
-            ScenarioContext.Current.Pending();
+            var xdoc = XDocument.Parse(reply);
+            var ns = xdoc.Root.GetDefaultNamespace();
+            var urls = xdoc.Root.Elements().Elements(ns + "loc").Select(l => (string)l);
+
+            foreach (var url in urls)
+            {
+                try
+                {
+                    wc.DownloadString(url);
+                    responses[url] = HttpStatusCode.OK;
+                }
+                catch (WebException e)
+                {
+                    var response = e?.Response as HttpWebResponse;
+                    responses[url] = response.StatusCode;
+                }
+            }
         }
         
         [Then(@"I should see a valid sitemap")]
@@ -83,13 +101,19 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Then(@"I should get no (.*) return codes")]
         public void ThenIShouldGetNoReturnCodes(int p0)
         {
-            ScenarioContext.Current.Pending();
+            foreach(var response in responses)
+            {
+                Assert.AreNotEqual(p0, (int)response.Value);
+            }
         }
         
         [Then(@"I should get only (.*) return codes")]
         public void ThenIShouldGetOnlyReturnCodes(int p0)
         {
-            ScenarioContext.Current.Pending();
+            foreach (var response in responses)
+            {
+                Assert.AreEqual(p0, (int)response.Value);
+            }
         }
 
         [BeforeTestRun]
