@@ -5,9 +5,9 @@ namespace TestDrive.SmokeTests.Features.Steps
 {
     [Binding]
     public class SitemapFeatureSteps
-    {
-        [Given(@"I visit http://localhost:(.*)/sitemap\.xml")]
-        public void GivenIVisitHttpLocalhostSitemap_Xml(int p0)
+    {   
+        [Given(@"I visit /sitemap\.xml")]
+        public void GivenIVisitSitemap_Xml()
         {
             ScenarioContext.Current.Pending();
         }
@@ -24,8 +24,14 @@ namespace TestDrive.SmokeTests.Features.Steps
             ScenarioContext.Current.Pending();
         }
         
-        [Then(@"I should get no (.*) error codes")]
-        public void ThenIShouldGetNoErrorCodes(int p0)
+        [Then(@"I should get no (.*) return codes")]
+        public void ThenIShouldGetNoReturnCodes(int p0)
+        {
+            ScenarioContext.Current.Pending();
+        }
+        
+        [Then(@"I should get only (.*) return codes")]
+        public void ThenIShouldGetOnlyReturnCodes(int p0)
         {
             ScenarioContext.Current.Pending();
         }
