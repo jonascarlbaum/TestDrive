@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Xml.Linq;
 using TechTalk.SpecFlow;
 using TestDrive.SmokeTests.Helpers;
-using TestDrive.Web.Controllers;
 
 namespace TestDrive.SmokeTests.Features.Steps
 {
@@ -38,16 +37,6 @@ namespace TestDrive.SmokeTests.Features.Steps
             {
                 webException = e;              
             }
-            
-            //var urldoc = XDocument.Parse(reply);
-            //var elements = urldoc.Elements("url");
-            //foreach (var node in elements)
-            //{
-            //    Console.WriteLine("url " + node.Attribute("loc").Value);
-            //    Console.WriteLine("priority " + node.Attribute("priority").Value);
-            //    Console.WriteLine("last modified " + node.Attribute("lastmod").Value);
-            //    Console.WriteLine("change frequency " + node.Attribute("changefreq").Value);
-            //}
         }
         
         [Given(@"I visit each URL in the response")]
@@ -75,12 +64,8 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Then(@"I should see a valid sitemap")]
         public void ThenIShouldSeeAValidSitemap()
         {
-            Assert.AreNotEqual(WebExceptionStatus.ConnectFailure, webException?.Status);
-            //webResponse = webException?.Response as HttpWebResponse;
-            
             var xdoc = XDocument.Parse(reply);
             var ns = xdoc.Root.GetDefaultNamespace();
-            //var urls = xdoc.Root.Elements().Elements(ns + "loc").Select(l => (string)l);
             var elements = xdoc.Root.Elements(ns + "url");
 
             /*            
