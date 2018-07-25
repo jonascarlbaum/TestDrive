@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Xml.Linq;
 using TechTalk.SpecFlow;
 using TestDrive.SmokeTests.Helpers;
@@ -29,7 +30,7 @@ namespace TestDrive.SmokeTests.Features.Steps
 
             try
             {
-                reply = wc.DownloadString(baseurl);
+                reply = wc.DownloadString($"{baseurl}/sitemap.xml");
             }
             catch (WebException e)
             {
@@ -56,11 +57,25 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Then(@"I should see a valid sitemap")]
         public void ThenIShouldSeeAValidSitemap()
         {
-            Assert.AreNotEqual(WebExceptionStatus.ConnectFailure, webException.Status);
-            webResponse = webException.Response as HttpWebResponse;
+            Assert.AreNotEqual(WebExceptionStatus.ConnectFailure, webException?.Status);
+            //webResponse = webException?.Response as HttpWebResponse;
             
-            var urldoc = XDocument.Parse(reply);
-            var elements = urldoc.Elements("url");
+            var xdoc = XDocument.Parse(reply);
+            var ns = xdoc.Root.GetDefaultNamespace();
+            //var urls = xdoc.Root.Elements().Elements(ns + "loc").Select(l => (string)l);
+            var elements = xdoc.Root.Elements(ns + "url");
+
+            /*            
+            <?xml version="1.0" encoding="utf-8"?>
+                <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                  <url>
+                    <loc>http://localhost:52764/en/about-us/news-events/events/reporting-made-simple/</loc>
+                    <lastmod>2018-07-25T23:27:04+02:00</lastmod>
+                    <changefreq>weekly</changefreq>
+                    <priority>0.5</priority>
+                  </url>
+                </urlset>
+             */
 
             Assert.IsTrue(elements.Any());
         }
@@ -80,8 +95,11 @@ namespace TestDrive.SmokeTests.Features.Steps
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
-            var assembly = typeof(StartPageController).Assembly;
-            process = IISExpress.StartIISExpressFromPath(assembly.Location, 52764);
+            var assembly = Assembly.GetExecutingAssembly();
+            var index = assembly.Location.LastIndexOf("\\TestDrive.SmokeTests\\");
+            var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
+
+            process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
         }
 
         [AfterTestRun]
