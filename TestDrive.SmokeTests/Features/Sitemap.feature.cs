@@ -74,7 +74,7 @@ namespace TestDrive.SmokeTests.Features
 #line 7
 this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.Given("I visit http://localhost:50874/sitemap.xml", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I visit /sitemap.xml", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 9
  testRunner.Then("I should see a valid sitemap", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

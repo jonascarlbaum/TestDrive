@@ -5,7 +5,7 @@
 
 @smoketest
 Scenario: Can retrieve sitemap
-	Given I visit http://localhost:50874/sitemap.xml
+	Given I visit /sitemap.xml
 	Then I should see a valid sitemap
 	
 @smoketest
