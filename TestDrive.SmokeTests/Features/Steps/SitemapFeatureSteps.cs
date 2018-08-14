@@ -1,5 +1,6 @@
 ﻿using Holf.AllForOne;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -105,11 +106,20 @@ namespace TestDrive.SmokeTests.Features.Steps
         [BeforeFeature]
         public static void Before()
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetAssembly(typeof(TestDrive.Web.Global));
             var index = assembly.Location.LastIndexOf("\\TestDrive.SmokeTests\\");
             var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
 
-            process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
+            Console.WriteLine($"Project dir should be [{projectDir}]");
+
+            try
+            {
+                process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
+            } catch (Exception e)
+            {
+                Console.Error.WriteLine($"Seems [{projectDir}] isn't a valid directory...", e);
+                throw e;
+            }
 
             if (process != null)
                 process.TieLifecycleToParentProcess();
