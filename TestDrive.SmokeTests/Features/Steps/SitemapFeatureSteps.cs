@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Holf.AllForOne;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace TestDrive.SmokeTests.Features.Steps
             var xdoc = XDocument.Parse(reply);
             var ns = xdoc.Root.GetDefaultNamespace();
             var urls = xdoc.Root.Elements().Elements(ns + "loc").Select(l => (string)l);
-
+            
             foreach (var url in urls)
             {
                 try
@@ -109,12 +110,19 @@ namespace TestDrive.SmokeTests.Features.Steps
             var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
 
             process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
+            process.TieLifecycleToParentProcess();
         }
 
         [AfterTestRun]
         public static void AfterTestRun()
         {
-            process.Stop();
+            if (process == null)
+                return;
+
+            if (!process.HasExited)
+                process.Kill();
+
+            process.Dispose();
         }
     }
 }
