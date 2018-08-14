@@ -56,8 +56,8 @@ namespace TestDrive.SmokeTests.Features.Steps
                 }
                 catch (WebException e)
                 {
-                    var response = e?.Response as HttpWebResponse;
-                    responses[url] = response.StatusCode;
+                    var response = (HttpWebResponse)e?.Response ?? null;
+                    responses[url] = response?.StatusCode ?? HttpStatusCode.RequestUriTooLong;
                 }
             }
         }
