@@ -102,19 +102,21 @@ namespace TestDrive.SmokeTests.Features.Steps
             }
         }
 
-        [BeforeTestRun]
-        public static void BeforeTestRun()
+        [BeforeFeature]
+        public static void Before()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var index = assembly.Location.LastIndexOf("\\TestDrive.SmokeTests\\");
             var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
 
             process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
-            process.TieLifecycleToParentProcess();
+
+            if (process != null)
+                process.TieLifecycleToParentProcess();
         }
 
-        [AfterTestRun]
-        public static void AfterTestRun()
+        [AfterFeature]
+        public static void After()
         {
             if (process == null)
                 return;
@@ -122,6 +124,7 @@ namespace TestDrive.SmokeTests.Features.Steps
             if (!process.HasExited)
                 process.Kill();
 
+            process.Stop();
             process.Dispose();
         }
     }
