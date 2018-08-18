@@ -45,11 +45,12 @@ namespace TestDrive.SmokeTests.Helpers
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
                 Arguments = arguments.ToString(),
-                //RedirectStandardOutput = true,
-                UseShellExecute = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
                 CreateNoWindow = true
             });
 
+            Console.WriteLine(process.StandardOutput.ReadToEnd());
             Thread.Sleep(10000);
 
             return process;
@@ -68,11 +69,12 @@ namespace TestDrive.SmokeTests.Helpers
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
                 Arguments = arguments.ToString(),
-                //RedirectStandardOutput = true,
-                UseShellExecute = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
                 CreateNoWindow = true
             });
 
+            Console.WriteLine(process.StandardOutput.ReadToEnd());
             Thread.Sleep(10000);
 
             return process;
