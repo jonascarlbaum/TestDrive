@@ -45,8 +45,8 @@ namespace TestDrive.SmokeTests.Helpers
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
                 Arguments = arguments.ToString(),
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
+                //RedirectStandardOutput = true,
+                UseShellExecute = true,
                 CreateNoWindow = true
             });
 
@@ -68,8 +68,8 @@ namespace TestDrive.SmokeTests.Helpers
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
                 Arguments = arguments.ToString(),
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
+                //RedirectStandardOutput = true,
+                UseShellExecute = true,
                 CreateNoWindow = true
             });
 
