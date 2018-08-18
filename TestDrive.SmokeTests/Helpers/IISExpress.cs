@@ -41,6 +41,8 @@ namespace TestDrive.SmokeTests.Helpers
             arguments.Append(path);
             arguments.Append(@" /Port:" + port);
             // arguments.Append(@"/site:" + site);
+
+            Console.WriteLine("IIS Express Start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -51,7 +53,9 @@ namespace TestDrive.SmokeTests.Helpers
             });
 
             Console.WriteLine(process.StandardOutput.ReadToEnd());
-            Thread.Sleep(10000);
+            process.WaitForExit();
+
+            Console.WriteLine("IIS Express should be started");
 
             return process;
         }
@@ -65,6 +69,8 @@ namespace TestDrive.SmokeTests.Helpers
             var arguments = new StringBuilder();
             arguments.Append(@"/path:" + path);
             arguments.Append(@" /Port:" + port);
+
+            Console.WriteLine("IIS Express start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -73,9 +79,10 @@ namespace TestDrive.SmokeTests.Helpers
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
-
+            
             Console.WriteLine(process.StandardOutput.ReadToEnd());
-            Thread.Sleep(10000);
+            process.WaitForExit();
+            Console.WriteLine("IIS Express should be started");
 
             return process;
         }
