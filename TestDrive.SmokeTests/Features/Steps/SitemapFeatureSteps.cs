@@ -110,7 +110,7 @@ namespace TestDrive.SmokeTests.Features.Steps
             var index = assembly.Location.LastIndexOf("\\TestDrive.SmokeTests\\");
             var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
 
-            Console.Error.WriteLine($"Project dir should be [{projectDir}]");
+            Console.WriteLine($"Project dir should be [{projectDir}]");
 
             try
             {
@@ -121,7 +121,7 @@ namespace TestDrive.SmokeTests.Features.Steps
                 throw e;
             }
             
-            Console.Error.WriteLine($"Project '#{process.Id}' started...");
+            Console.WriteLine($"Process '#{process.Id}' started...");
 
             if (process != null)
                 process.TieLifecycleToParentProcess();
