@@ -22,7 +22,7 @@ namespace TestDrive.SmokeTests.Features.Steps
 
         private string reply = null;
         private WebException webException;
-        private HttpWebResponse webResponse = null;
+        //private HttpWebResponse webResponse = null;
         private Dictionary<string, HttpStatusCode> responses = new Dictionary<string, HttpStatusCode>();
         private static Process process;
 
