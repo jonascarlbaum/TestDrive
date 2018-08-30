@@ -41,7 +41,7 @@ namespace TestDrive.Data
 
         private void ResetEPiDatabase(string backup, string databaseName)
         {
-            RestoreFromBackupFile(backup, databaseName);
+            RestoreFromBackupFile(System.IO.File.Exists(backup) ? backup : Server.MapPath(backup), databaseName);
             ServiceLocator.Current.GetInstance<IContentCacheRemover>().Clear();
         }
 

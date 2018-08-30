@@ -511,6 +511,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TestDrive.Data\TestDrive.Data.csproj">
+      <Project>{a0eb3d6e-e80d-48e8-b526-f22716043d14}</Project>
+      <Name>TestDrive.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
