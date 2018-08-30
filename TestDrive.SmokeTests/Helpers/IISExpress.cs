@@ -50,12 +50,12 @@ namespace TestDrive.SmokeTests.Helpers
                 CreateNoWindow = true
             });
             
-            while (!process.StandardOutput.EndOfStream)
+            while (!process.HasExited && !process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
 
                 Console.Error.WriteLine(line);
-                if (line.Contains("Application started."))
+                if (line.Contains("Application started.") || line.Contains("IIS Express is running."))
                     break;
             }
 
@@ -81,12 +81,12 @@ namespace TestDrive.SmokeTests.Helpers
                 CreateNoWindow = true
             });
 
-            while (!process.StandardOutput.EndOfStream)
+            while (!process.HasExited && !process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
                 
                 Console.Error.WriteLine(line);
-                if (line.Contains("Application started."))
+                if (line.Contains("Application started.") || line.Contains("IIS Express is running."))
                     break;
             }
 
