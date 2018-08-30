@@ -2,11 +2,14 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using TechTalk.SpecFlow;
 using TestDrive.SmokeTests.Helpers;
@@ -16,7 +19,7 @@ namespace TestDrive.SmokeTests.Features.Steps
     [Binding]
     public class SitemapFeatureSteps
     {
-        private WebClient GetNewClient()
+        private static WebClient GetNewClient()
         {
             return new WebClient
             {
@@ -32,13 +35,15 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Given(@"I visit /sitemap\.xml")]
         public void GivenIVisitSitemap_Xml()
         {
-            var baseurl = "http://localhost:52764";
+            var baseurl = ConfigurationManager.AppSettings["Server:Url"];
 
             try
             {
+                //reply = GetAsync($"{baseurl}/sitemap.xml").Result;
+                //Console.Error.WriteLine("SUCCESS fetching sitemap!");
                 using (var wc = GetNewClient())
                 {
-                    reply = wc.DownloadString($"{baseurl}/sitemap.xml");
+                    reply = wc.DownloadStringTaskAsync($"{baseurl}/sitemap.xml").Result;
                     Console.Error.WriteLine("SUCCESS fetching sitemap!");
                 }
             }
@@ -60,12 +65,19 @@ namespace TestDrive.SmokeTests.Features.Steps
             {
                 try
                 {
-                    Console.Error.WriteLine($"Visit '{url}'...");
+                    Console.Error.WriteLine($"Visit '{url}'");
 
                     using (var wc = GetNewClient())
                     {
-                        wc.DownloadString(url);
-                        Thread.Sleep(10 + (urls.ToList().IndexOf(url) % 5 == 0 ? 200 : 0));
+                        var urlBuilder = new UriBuilder(url)
+                        {
+                            Port = int.Parse(ConfigurationManager.AppSettings["Server:Port"])
+                        };
+
+                     wc.DownloadStringTaskAsync(new Uri(urlBuilder.ToString()));
+                    //Thread.Sleep(10 + (urls.ToList().IndexOf(url) % 5 == 0 ? 200 : 0));
+
+                    //var kaka = GetAsync(urlBuilder.ToString()).Result;
                     }
 
                     responses[url] = HttpStatusCode.OK;
@@ -126,6 +138,7 @@ namespace TestDrive.SmokeTests.Features.Steps
         [BeforeScenario]
         public static void BeforeScenario()
         {
+            //System.Net.ServicePointManager.DefaultConnectionLimit = 1000;
         }
 
         [AfterScenario]
@@ -144,7 +157,7 @@ namespace TestDrive.SmokeTests.Features.Steps
 
             try
             {
-                process = IISExpress.StartIISExpressFromPath(projectDir, 52764);
+                process = IISExpress.StartIISExpressFromPath(projectDir, int.Parse(ConfigurationManager.AppSettings["Server:Port"]));
             } catch (Exception e)
             {
                 Console.Error.WriteLine($"Seems [{projectDir}] isn't a valid directory...", e);
@@ -153,6 +166,21 @@ namespace TestDrive.SmokeTests.Features.Steps
             
             if (process != null)
                 process.TieLifecycleToParentProcess();
+            
+            //var baseurl = ConfigurationManager.AppSettings["Server:Url"];
+
+            //try
+            //{
+            //    using (var wc = GetNewClient())
+            //    {
+            //        wc.DownloadString($"{baseurl}/sitemap.xml");
+            //        Thread.Sleep(15000);
+            //    }
+            //}
+            //catch (WebException e)
+            //{
+            //    Console.Error.WriteLine("ERROR fetching sitemap!", e);
+            //}
         }
 
         [AfterFeature]
@@ -168,10 +196,38 @@ namespace TestDrive.SmokeTests.Features.Steps
 
                 process.Stop();
                 process.Dispose();
+
+                process = null;
             }
             catch (Exception e)
             {
                 Console.Error.WriteLine("Error in AfterFeature", e);
+            }
+        }
+
+        public string Get(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        public async Task<string> GetAsync(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return await reader.ReadToEndAsync();
             }
         }
     }

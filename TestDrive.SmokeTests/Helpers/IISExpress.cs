@@ -80,7 +80,7 @@ namespace TestDrive.SmokeTests.Helpers
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
-
+            
             while (!process.HasExited && !process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
