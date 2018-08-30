@@ -110,7 +110,7 @@ namespace TestDrive.SmokeTests.Features.Steps
             var index = assembly.Location.LastIndexOf("\\TestDrive.SmokeTests\\");
             var projectDir = $"{assembly.Location.Remove(index)}\\TestDrive.Web";
 
-            Console.Error.WriteLine($"Project dir should be [{projectDir}]");
+            //Console.Error.WriteLine($"Project dir should be [{projectDir}]");
 
             try
             {
@@ -121,8 +121,6 @@ namespace TestDrive.SmokeTests.Features.Steps
                 throw e;
             }
             
-            Console.Error.WriteLine($"Process '#{process.Id}' started...");
-
             if (process != null)
                 process.TieLifecycleToParentProcess();
         }
@@ -130,7 +128,6 @@ namespace TestDrive.SmokeTests.Features.Steps
         [AfterFeature]
         public static void After()
         {
-            Console.Error.WriteLine($"After test '{(process?.ToString() ?? "unknown")}'");
             if (process == null)
                 return;
 

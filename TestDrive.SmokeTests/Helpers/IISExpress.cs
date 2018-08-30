@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 
 namespace TestDrive.SmokeTests.Helpers
 {
@@ -42,7 +41,6 @@ namespace TestDrive.SmokeTests.Helpers
             arguments.Append(@" /Port:" + port);
             // arguments.Append(@"/site:" + site);
 
-            Console.Error.WriteLine("IIS Express Start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -51,11 +49,13 @@ namespace TestDrive.SmokeTests.Helpers
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
-
-            Console.Error.WriteLine(process.StandardOutput.ReadToEnd());
-            process.WaitForExit();
-
-            Console.Error.WriteLine("IIS Express should be started");
+            
+            while (!process.StandardOutput.EndOfStream)
+            {
+                string line = process.StandardOutput.ReadLine();
+                if (line.Contains("Application started."))
+                    break;
+            }
 
             return process;
         }
@@ -70,7 +70,6 @@ namespace TestDrive.SmokeTests.Helpers
             arguments.Append(@"/path:" + path);
             arguments.Append(@" /Port:" + port);
 
-            Console.Error.WriteLine("IIS Express start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -79,23 +78,24 @@ namespace TestDrive.SmokeTests.Helpers
                 UseShellExecute = false,
                 CreateNoWindow = true
             });
-            
-            Console.Error.WriteLine(process.StandardOutput.ReadToEnd());
-            process.WaitForExit();
-            Console.Error.WriteLine("IIS Express should be started");
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                string line = process.StandardOutput.ReadLine();
+                if (line.Contains("Application started."))
+                    break;
+            }
 
             return process;
         }
 
         public static void Stop(this Process process)
         {
-            Console.Error.WriteLine($"Try stopping process '{(process?.Id != null ? "unknown" : process.Id.ToString())}'");
             try
             {
                 for (IntPtr ptr = NativeMethods.GetTopWindow(IntPtr.Zero); ptr != IntPtr.Zero; ptr = NativeMethods.GetWindow(ptr, 2))
                 {
                     NativeMethods.GetWindowThreadProcessId(ptr, out uint num);
-                    Console.Error.WriteLine($"Testing process '{num}'");
                     if (process?.Id == num)
                     {
                         HandleRef hWnd = new HandleRef(null, ptr);
