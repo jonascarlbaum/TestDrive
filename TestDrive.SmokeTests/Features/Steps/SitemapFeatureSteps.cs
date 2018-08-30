@@ -148,14 +148,21 @@ namespace TestDrive.SmokeTests.Features.Steps
         [AfterFeature]
         public static void After()
         {
-            if (process == null)
-                return;
+            try
+            {
+                if (process == null)
+                    return;
 
-            if (!process.HasExited)
-                process.Kill();
+                if (!process.HasExited)
+                    process.Kill();
 
-            process.Stop();
-            process.Dispose();
+                process.Stop();
+                process.Dispose();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("Error in AfterFeature", e);
+            }
         }
     }
 }
