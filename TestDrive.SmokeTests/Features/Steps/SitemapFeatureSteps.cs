@@ -15,10 +15,13 @@ namespace TestDrive.SmokeTests.Features.Steps
     [Binding]
     public class SitemapFeatureSteps
     {
-        private WebClient wc = new WebClient
+        private WebClient GetNewClient()
         {
-            Encoding = System.Text.Encoding.UTF8
-        };
+            return new WebClient
+            {
+                Encoding = System.Text.Encoding.UTF8
+            };
+        }
 
         private string reply = null;
         private WebException webException;
@@ -33,8 +36,11 @@ namespace TestDrive.SmokeTests.Features.Steps
 
             try
             {
-                reply = wc.DownloadString($"{baseurl}/sitemap.xml");
-                Console.Error.WriteLine("SUCCESS fetching sitemap!");
+                using (var wc = GetNewClient())
+                {
+                    reply = wc.DownloadString($"{baseurl}/sitemap.xml");
+                    Console.Error.WriteLine("SUCCESS fetching sitemap!");
+                }
             }
             catch (WebException e)
             {
@@ -55,7 +61,12 @@ namespace TestDrive.SmokeTests.Features.Steps
                 try
                 {
                     Console.Error.WriteLine($"Visit '{url}'...");
-                    wc.DownloadString(url);
+
+                    using (var wc = GetNewClient())
+                    {
+                        wc.DownloadString(url);
+                    }
+
                     responses[url] = HttpStatusCode.OK;
                     Console.Error.WriteLine($"Success visiting '{url}'...");
                 }
