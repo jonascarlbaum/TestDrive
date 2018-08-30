@@ -106,19 +106,21 @@ namespace TestDrive.SmokeTests.Features.Steps
         [Then(@"I should get no (.*) return codes")]
         public void ThenIShouldGetNoReturnCodes(int p0)
         {
-            foreach(var response in responses)
-            {
-                Assert.AreNotEqual(p0, (int)response.Value);
-            }
+            Assert.True(responses.All((x) => (int)x.Value != p0));
+            //foreach(var response in responses)
+            //{
+            //    Assert.AreNotEqual(p0, (int)response.Value);
+            //}
         }
         
         [Then(@"I should get only (.*) return codes")]
         public void ThenIShouldGetOnlyReturnCodes(int p0)
         {
-            foreach (var response in responses)
-            {
-                Assert.AreEqual(p0, (int)response.Value);
-            }
+            Assert.True(responses.All((x) => (int)x.Value == p0));
+            //foreach (var response in responses)
+            //{
+            //    Assert.AreEqual(p0, (int)response.Value);
+            //}
         }
 
         [BeforeFeature]
