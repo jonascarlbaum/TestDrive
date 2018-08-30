@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Linq;
 using TechTalk.SpecFlow;
 using TestDrive.SmokeTests.Helpers;
@@ -65,6 +66,7 @@ namespace TestDrive.SmokeTests.Features.Steps
                     using (var wc = GetNewClient())
                     {
                         wc.DownloadString(url);
+                        Thread.Sleep(10 + (urls.ToList().IndexOf(url) % 5 == 0 ? 200 : 0));
                     }
 
                     responses[url] = HttpStatusCode.OK;
