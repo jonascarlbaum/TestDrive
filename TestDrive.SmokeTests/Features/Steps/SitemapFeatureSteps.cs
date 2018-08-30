@@ -61,7 +61,7 @@ namespace TestDrive.SmokeTests.Features.Steps
                 }
                 catch (WebException e)
                 {
-                    Console.Error.WriteLine($"Failure visiting '{url}'...");
+                    Console.Error.WriteLine($"Failure visiting '{url}'...", e);
                     var response = (HttpWebResponse)e?.Response ?? null;
                     responses[url] = response?.StatusCode ?? HttpStatusCode.BadRequest;
                 }
