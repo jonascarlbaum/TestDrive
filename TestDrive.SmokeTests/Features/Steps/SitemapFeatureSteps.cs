@@ -26,7 +26,6 @@ namespace TestDrive.SmokeTests.Features.Steps
 
         private string reply = null;
         private WebException webException;
-        //private HttpWebResponse webResponse = null;
         private Dictionary<string, HttpStatusCode> responses = new Dictionary<string, HttpStatusCode>();
         private static Process process;
 
@@ -121,6 +120,17 @@ namespace TestDrive.SmokeTests.Features.Steps
             //{
             //    Assert.AreEqual(p0, (int)response.Value);
             //}
+        }
+
+
+        [BeforeScenario]
+        public static void BeforeScenario()
+        {
+        }
+
+        [AfterScenario]
+        public static void AfterScenario()
+        {
         }
 
         [BeforeFeature]

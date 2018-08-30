@@ -70,7 +70,7 @@ namespace TestDrive.SmokeTests.Helpers
 
             var arguments = new StringBuilder();
             arguments.Append(@"/path:" + path);
-            arguments.Append(@" /Port:" + port);
+            arguments.Append(@" /port:" + port);
 
             var process = Process.Start(new ProcessStartInfo()
             {
@@ -107,6 +107,7 @@ namespace TestDrive.SmokeTests.Helpers
                         return;
                     }
                 }
+                process.Close();
             }
             catch (ArgumentException e)
             {
