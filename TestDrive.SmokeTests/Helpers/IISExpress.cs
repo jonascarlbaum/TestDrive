@@ -53,6 +53,8 @@ namespace TestDrive.SmokeTests.Helpers
             while (!process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
+
+                Console.Error.WriteLine(line);
                 if (line.Contains("Application started."))
                     break;
             }
@@ -82,6 +84,8 @@ namespace TestDrive.SmokeTests.Helpers
             while (!process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
+                
+                Console.Error.WriteLine(line);
                 if (line.Contains("Application started."))
                     break;
             }
