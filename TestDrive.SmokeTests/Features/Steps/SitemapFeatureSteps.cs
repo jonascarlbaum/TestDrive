@@ -54,13 +54,16 @@ namespace TestDrive.SmokeTests.Features.Steps
             {
                 try
                 {
+                    Console.Error.WriteLine($"Visit '{url}'...");
                     wc.DownloadString(url);
                     responses[url] = HttpStatusCode.OK;
+                    Console.Error.WriteLine($"Success visiting '{url}'...");
                 }
                 catch (WebException e)
                 {
+                    Console.Error.WriteLine($"Failure visiting '{url}'...");
                     var response = (HttpWebResponse)e?.Response ?? null;
-                    responses[url] = response?.StatusCode ?? HttpStatusCode.RequestUriTooLong;
+                    responses[url] = response?.StatusCode ?? HttpStatusCode.BadRequest;
                 }
             }
         }
