@@ -34,10 +34,12 @@ namespace TestDrive.SmokeTests.Features.Steps
             try
             {
                 reply = wc.DownloadString($"{baseurl}/sitemap.xml");
+                Console.Error.WriteLine("SUCCESS fetching sitemap!");
             }
             catch (WebException e)
             {
-                webException = e;              
+                webException = e;
+                Console.Error.WriteLine("ERROR fetching sitemap!", e);
             }
         }
         
