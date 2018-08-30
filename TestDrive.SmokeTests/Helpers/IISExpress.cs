@@ -42,7 +42,7 @@ namespace TestDrive.SmokeTests.Helpers
             arguments.Append(@" /Port:" + port);
             // arguments.Append(@"/site:" + site);
 
-            Console.WriteLine("IIS Express Start ->");
+            Console.Error.WriteLine("IIS Express Start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -52,10 +52,10 @@ namespace TestDrive.SmokeTests.Helpers
                 CreateNoWindow = true
             });
 
-            Console.WriteLine(process.StandardOutput.ReadToEnd());
+            Console.Error.WriteLine(process.StandardOutput.ReadToEnd());
             process.WaitForExit();
 
-            Console.WriteLine("IIS Express should be started");
+            Console.Error.WriteLine("IIS Express should be started");
 
             return process;
         }
@@ -70,7 +70,7 @@ namespace TestDrive.SmokeTests.Helpers
             arguments.Append(@"/path:" + path);
             arguments.Append(@" /Port:" + port);
 
-            Console.WriteLine("IIS Express start ->");
+            Console.Error.WriteLine("IIS Express start ->");
             var process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\IIS Express\\iisexpress.exe",
@@ -80,20 +80,22 @@ namespace TestDrive.SmokeTests.Helpers
                 CreateNoWindow = true
             });
             
-            Console.WriteLine(process.StandardOutput.ReadToEnd());
+            Console.Error.WriteLine(process.StandardOutput.ReadToEnd());
             process.WaitForExit();
-            Console.WriteLine("IIS Express should be started");
+            Console.Error.WriteLine("IIS Express should be started");
 
             return process;
         }
 
         public static void Stop(this Process process)
         {
+            Console.Error.WriteLine($"Try stopping process '{(process?.Id != null ? "unknown" : process.Id.ToString())}'");
             try
             {
                 for (IntPtr ptr = NativeMethods.GetTopWindow(IntPtr.Zero); ptr != IntPtr.Zero; ptr = NativeMethods.GetWindow(ptr, 2))
                 {
                     NativeMethods.GetWindowThreadProcessId(ptr, out uint num);
+                    Console.Error.WriteLine($"Testing process '{num}'");
                     if (process?.Id == num)
                     {
                         HandleRef hWnd = new HandleRef(null, ptr);
@@ -102,8 +104,9 @@ namespace TestDrive.SmokeTests.Helpers
                     }
                 }
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
+                Console.Error.WriteLine("Couldn't stop process", e);
             }
         }
     }
