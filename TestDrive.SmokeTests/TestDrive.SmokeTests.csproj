@@ -69,7 +69,6 @@
       <DependentUpon>Sitemap.feature</DependentUpon>
     </Compile>
     <Compile Include="Steps\SitemapFeatureSteps.cs" />
-    <Compile Include="Helpers\IISExpress.cs" />
     <Compile Include="IISExpress\IISExpressHost.cs" />
     <Compile Include="IISExpress\IISExpressHostFactory.cs" />
     <Compile Include="IISExpress\NativeMethods.cs" />
