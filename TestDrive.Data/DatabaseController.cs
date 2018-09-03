@@ -9,7 +9,7 @@ namespace TestDrive.Data
 {
     public class DatabaseController : Controller
     {
-        public ActionResult RestoreDB()
+        public ActionResult RestoreForTests()
         {
             var resetTimer = Stopwatch.StartNew();
             ResetEPiDatabase
@@ -23,8 +23,8 @@ namespace TestDrive.Data
                     ResetEPiDatabaseFromBackupFileIn = resetTimer.ElapsedMilliseconds + " ms"
                 }, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult RestoreContentRich()
+        
+        public ActionResult RestoreForDevelopment()
         {
             var resetTimer = Stopwatch.StartNew();
             ResetEPiDatabase
